@@ -9,6 +9,7 @@ export const icons = {
   call: require("../../assets/icons/call.png"),
   delivering: require("../../assets/icons/delivering.png"),
   delivered: require("../../assets/icons/delivered.png"),
+  delivered_white: require("../../assets/icons/delivered_white.png"),
 };
 
 export const images = {
@@ -20,4 +21,5 @@ export const images = {
   logo: require("../../assets/images/logo.png"),
   spray: require("../../assets/images/spray.png"),
   header_logo: require("../../assets/images/header_logo.png"),
+  banner: require("../../assets/images/img_banner.jpeg"),
 };

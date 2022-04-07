@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../../components/Container";
 import { View, Text, Image } from "react-native";
 import { color } from "../../utils/color";
@@ -34,15 +34,21 @@ function Verification({ navigation, route }) {
       });
       console.log(data);
       if (data.status == 200) {
-        dispatch(setUserData(data.user));
-        //dispatch(setIsUser(true))
+        // dispatch(setIsUser(true))÷\
         await AsyncStorage.setItem(
           "access_token",
           JSON.stringify(data.user?.api_token)
         );
         await AsyncStorage.setItem("user_data", JSON.stringify(data.user));
+        dispatch(setUserData(data.user));
         setBottom(true);
-        setBottomType("input");
+        // setBottomType("input");
+        setBottomType("available");
+        fetchAddress();
+        Toast("Redirecting in 3 seconds");
+        setTimeout(() => {
+          dispatch(setIsUser(true));
+        }, 3000);
       } else {
         Toast("Invalid Code");
       }
@@ -65,7 +71,7 @@ function Verification({ navigation, route }) {
       });
       if (data.success == "service available") {
         setBottomType("available");
-        fetchAddress();
+        // fetchAddress();
         Toast("Redirecting in 3 seconds");
         setTimeout(() => {
           dispatch(setIsUser(true));
@@ -177,85 +183,22 @@ function Verification({ navigation, route }) {
             borderTopRightRadius: 15,
           }}
         >
-          {bottomType == "input" ? (
-            <View>
-              <FloatingLabel
-                value={pincode}
-                style={{
-                  backgroundColor: color.transparent,
-                  marginTop: 0,
-                  borderColor: color.black,
-                  borderWidth: 1,
-                  color: color.black,
-                }}
-                inputStyle={{ color: color.black }}
-                label={"Enter Pincode"}
-                labelColor={color.black}
-                autoCapitalize="none"
-                keyboard={"phone-pad"}
-                maxLength={6}
-                onChangeText={(value) => {
-                  setPincode(value);
-                }}
-              />
-              <Button
-                loading={pinloading}
-                titleStyle={{ fontSize: 16, color: color.white }}
-                style={{
-                  marginTop: 35,
-                  backgroundColor: color.primary,
-                  alignSelf: "center",
-                }}
-                title={"Submit"}
-                onPress={() => verifyPincode()}
-              />
-            </View>
-          ) : bottomType == "available" ? (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Image style={{ height: 50, width: 50 }} source={icons.tick} />
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginTop: 15,
-                  ...GlobalStyles.semi_bold_text,
-                }}
-              >
-                {type == "login"
-                  ? "Login successful"
-                  : "Successfully  Registered"}
-              </Text>
-            </View>
-          ) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Image style={{ height: 50, width: 50 }} source={icons.close} />
-              <Text
-                style={{
-                  fontSize: 20,
-                  maxWidth: "80%",
-                  color: color.red,
-                  marginTop: 15,
-                  textAlign: "center",
-                  ...GlobalStyles.semi_bold_text,
-                }}
-              >
-                No Service available in your location
-              </Text>
-              <Text
-                onPress={() => setBottomType("input")}
-                style={{
-                  fontSize: 12,
-                  textDecorationLine: "underline",
-                  maxWidth: "80%",
-                  color: color.black,
-                  marginTop: 10,
-                  textAlign: "center",
-                  ...GlobalStyles.semi_bold_text,
-                }}
-              >
-                Try again
-              </Text>
-            </View>
-          )}
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Image style={{ height: 50, width: 50 }} source={icons.tick} />
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: 15,
+                marginBottom: 30,
+                ...GlobalStyles.semi_bold_text,
+                color: 'black'
+              }}
+            >
+              {type == "login"
+                ? "Login successful"
+                : "Successfully  Registered"}
+            </Text>
+          </View>
         </View>
       </BottomSheet>
     </Container>

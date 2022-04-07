@@ -20,20 +20,25 @@ import { IMAGE_URL } from "../../utils/url";
 import Carousel from "react-native-banner-carousel";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Picker } from "@react-native-picker/picker";
+import { BottomSheet } from "react-native-btr";
 
 export default function ProductDescription({ navigation, route }) {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState({});
   const [open, setOpen] = useState(false);
   const { user_data } = useSelector((state) => state.reducer);
+  const [quantity, setQuantity] = useState(1);
+  const [quantityVisible, setQuantityVisible] = useState(false);
+  const [isBuyNow, setIsBuyNow] = useState(false);
 
   const { name, cat, id } = route.params;
   const hide_action = route.params.hide_action;
 
   const addToCart = async (is_buy_now) => {
+    setQuantityVisible(false)
     try {
       const { data } = await common_axios.post(`/cart`, {
-        qty: 1,
+        qty: quantity,
         variant: current.id,
         product_id: id,
       });
@@ -98,7 +103,10 @@ export default function ProductDescription({ navigation, route }) {
             }}
           >
             <TouchableOpacity
-              onPress={() => addToCart(true)}
+              onPress={() => {
+                setQuantityVisible(true)
+                setIsBuyNow(true)
+              }}
               style={{
                 justifyContent: "center",
                 width: "47%",
@@ -120,7 +128,10 @@ export default function ProductDescription({ navigation, route }) {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => addToCart()}
+              onPress={() => {
+                setQuantityVisible(true)
+                setIsBuyNow(false)
+              }}
               style={{
                 justifyContent: "center",
                 width: "47%",
@@ -294,9 +305,8 @@ export default function ProductDescription({ navigation, route }) {
             >
               (
               {data?.variants?.map((pr, i) => {
-                return `${pr.variant}${
-                  i == data?.variants?.length - 1 ? "" : ", "
-                }`;
+                return `${pr.variant}${i == data?.variants?.length - 1 ? "" : ", "
+                  }`;
               })}
               )
             </Text>
@@ -353,6 +363,132 @@ export default function ProductDescription({ navigation, route }) {
             </View>
           </View>
         </ScrollView>
+        <BottomSheet visible={quantityVisible}
+          onBackButtonPress={() => setQuantityVisible(false)}
+          onBackdropPress={() => setQuantityVisible(false)}>
+
+          <View style={{
+            backgroundColor: 'white',
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+            padding: 20,
+          }}>
+            <Text style={{
+              fontSize: 20,
+              color: color.black,
+              marginBottom: 20,
+              ...GlobalStyles.semi_bold_text600,
+            }}>Select Quantity</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    setQuantity(quantity + 1)
+                  }}
+                  style={{
+                    backgroundColor: color.primary,
+                    height: 25,
+                    width: 25,
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <Text style={{
+                    fontSize: 18,
+                    color: color.white,
+                    padding: 0,
+                    ...GlobalStyles.semi_bold_text600,
+                  }}>+</Text>
+                </TouchableOpacity>
+
+                <Text style={{
+                  fontSize: 18,
+                  marginHorizontal: 25,
+                  color: color.black,
+                  ...GlobalStyles.semi_bold_text600,
+                }}>{quantity}</Text>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    if ((quantity - 1) != 0)
+                      setQuantity(quantity - 1)
+                  }}
+                  style={{
+                    backgroundColor: color.primary,
+                    height: 25,
+                    width: 25,
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <Text style={{
+                    fontSize: 18,
+                    color: color.white,
+                    padding: 0,
+                    ...GlobalStyles.semi_bold_text600,
+                  }}>-</Text>
+                </TouchableOpacity>
+              </View>
+
+              <Text style={{
+                fontSize: 15,
+                flex: 1,
+                color: color.black,
+                textAlign: 'center',
+                ...GlobalStyles.semi_bold_text600,
+              }}>X</Text>
+
+              <Text style={{
+                fontSize: 20,
+                color: color.black,
+                textAlign: 'center',
+                ...GlobalStyles.semi_bold_text600,
+              }}>₹{current.offer_price ? current.offer_price : current.price}</Text>
+
+              <Text style={{
+                fontSize: 15,
+                flex: 1,
+                color: color.black,
+                textAlign: 'center',
+                ...GlobalStyles.semi_bold_text600,
+              }}>=</Text>
+
+              <Text style={{
+                fontSize: 20,
+                color: color.black,
+                textAlign: 'center',
+                ...GlobalStyles.semi_bold_text600,
+              }}>₹{quantity * parseInt(current.offer_price ? current.offer_price : current.price)}</Text>
+
+            </View>
+
+            <TouchableOpacity
+              onPress={() => { addToCart(isBuyNow) }}
+              style={{
+                backgroundColor: color.primary,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: 10,
+                marginBottom: 40,
+                marginTop: 25
+              }}>
+              <Text style={{
+                fontSize: 18,
+                color: color.white,
+                padding: 0,
+                ...GlobalStyles.semi_bold_text600,
+              }}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+
+        </BottomSheet>
+
       </View>
     </SafeAreaView>
   );

@@ -49,20 +49,24 @@ export default function Entry() {
 
   const fetchAddress = async () => {
     const raw_address = await AsyncStorage.getItem("address");
+    console.log("raw_address", raw_address);
     if (raw_address) {
-      dispatch(setIsUser(true));
+      alert(JSON.stringify(raw_address))
     } else {
       await AsyncStorage.clear();
     }
   };
-
+  
   const check_auth = async () => {
     const val = await AsyncStorage.getItem("access_token");
     const new_val = JSON.parse(val);
+    console.log("new_val", new_val);
     if (new_val) {
       const user_data = await AsyncStorage.getItem("user_data");
-      fetchAddress();
       dispatch(setUserData(JSON.parse(user_data)));
+      console.log("user_data", user_data);
+      dispatch(setIsUser(true));
+      // fetchAddress();
     } else {
       dispatch(setIsUser(false));
     }
