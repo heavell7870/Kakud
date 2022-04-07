@@ -208,6 +208,7 @@ export default function Cart({ navigation }) {
                   height: 145,
                   width: "90%",
                   marginHorizontal: "5%",
+                  alignItems: 'center',
                   borderRadius: 20,
                   shadowColor: color.black,
                   shadowOffset: { height: 3, width: 3 },
@@ -257,9 +258,9 @@ export default function Cart({ navigation }) {
                       marginTop: 3,
                       ...GlobalStyles.regular_text,
                     }}
-                    numberOfLines={1}
+                  // numberOfLines={1}
                   >
-                    ({item.variant})
+                    (₹{item.price} X {JSON.stringify(item.quantity)})
                   </Text>
                   <View
                     style={{
@@ -271,10 +272,10 @@ export default function Cart({ navigation }) {
                     <Text style={{ fontWeight: "600" }}>
                       ₹
                       <Text style={{ ...GlobalStyles.semi_bold_text600 }}>
-                        {item.offer_price ? item.offer_price : item.price}
+                        {parseInt(item.price) * item.quantity}
                       </Text>
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
                         fontSize: 10,
                         color: color.grey,
@@ -293,7 +294,7 @@ export default function Cart({ navigation }) {
                       >
                         {item.price}
                       </Text>
-                    </Text>
+                    </Text> */}
                   </View>
                   <View>
                     <View>
@@ -384,8 +385,8 @@ export default function Cart({ navigation }) {
               marginTop: 15,
               borderTopColor: "#CECECE",
               borderTopWidth: 0.5,
-              borderBottomWidth: 0.5,
-              borderBottomColor: "#CECECE",
+              // borderBottomWidth: 0.5,
+              // borderBottomColor: "#CECECE",
               paddingVertical: 10,
             }}
           >
@@ -406,6 +407,21 @@ export default function Cart({ navigation }) {
               </Text>
             </Text>
           </View>
+          <Text
+            style={{
+              color: "rgba(108, 108, 108, 1)",
+              ...GlobalStyles.regular_text,
+              fontSize: 10,
+              textAlign: 'right'
+            }}
+          >
+            *All prices includes GST{'\n'}*shipping charges will be extra
+          </Text>
+          <View style={{
+            height: 0.5,
+            backgroundColor: "#CECECE",
+            marginTop: 5
+          }} />
           {/* <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
                         <Text style={{ color: "rgba(108, 108, 108, 1)", ...GlobalStyles.regular_text }}>Delivery charges</Text>
                         <Text style={{ color: color.black, ...GlobalStyles.dm_sans_regular }}>₹99</Text>

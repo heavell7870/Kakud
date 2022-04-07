@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../../components/Container";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Alert, Keyboard } from "react-native";
 import { color } from "../../utils/color";
 import Button from "../../components/Button";
 import { GlobalStyles } from "../../utils/globalStyles";
@@ -13,6 +13,21 @@ function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+
+    // cleanup function
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
+      Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
+    };
+  }, []);
+
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const _keyboardDidShow = () => setKeyboardStatus(true);
+  const _keyboardDidHide = () => setKeyboardStatus(false);
 
   const dispatch = useDispatch();
 
@@ -30,12 +45,14 @@ function Login({ navigation }) {
       });
       console.log(data);
       setLoading(false);
-      if (data) {
+      if (data.success == 1) {
         navigation.navigate("Verification", { phone: email, type: "login" });
+      } else {
+        Alert.alert('', data.message);
       }
     } catch (e) {
       console.log(e.response?.data?.message);
-      alert("Server error");
+      Alert.alert('', e.response?.data?.message);
       setLoading(false);
     }
   };
@@ -53,10 +70,10 @@ function Login({ navigation }) {
           alignItems: "center",
         }}
       >
-        <Image
+        {!keyboardStatus && <Image
           style={{ height: 226, width: 226, resizeMode: "contain" }}
           source={images.logo}
-        />
+        />}
         <Text
           style={{
             fontSize: 28,

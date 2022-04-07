@@ -376,8 +376,8 @@ export default function OrderSummary({ navigation, route }) {
               marginTop: 15,
               borderTopColor: "#CECECE",
               borderTopWidth: 0.5,
-              borderBottomWidth: 0.5,
-              borderBottomColor: "#CECECE",
+              // borderBottomWidth: 0.5,
+              // borderBottomColor: "#CECECE",
               paddingVertical: 10,
             }}
           >
@@ -393,6 +393,21 @@ export default function OrderSummary({ navigation, route }) {
               ₹<Text style={{ ...GlobalStyles.regular_text }}>{total}</Text>
             </Text>
           </View>
+          <Text
+            style={{
+              color: "rgba(108, 108, 108, 1)",
+              ...GlobalStyles.regular_text,
+              fontSize: 10,
+              textAlign: 'right'
+            }}
+          >
+            *All prices includes GST{'\n'}*shipping charges will be extra
+          </Text>
+          <View style={{
+            height: 0.5,
+            backgroundColor: "#CECECE",
+            marginTop: 5
+          }} />
           {/* <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
                         <Text style={{ color: "rgba(108, 108, 108, 1)", ...GlobalStyles.regular_text }}>Delivery charges</Text>
                         <Text style={{ color: color.black, ...GlobalStyles.dm_sans_regular }}>₹99</Text>

@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   Linking,
+  Dimensions,
   Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -218,17 +219,24 @@ const ListHeader = ({ address }) => (
         )}
         <View
           style={{
-            width: "100%",
             borderRadius: 10,
             marginTop: 10,
             backgroundColor: color.primary,
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 15,
             flexDirection: "row",
           }}
         >
-          <View style={{ width: "70%" }}>
+
+          <Image
+            resizeMode="contain"
+            source={images.banner}
+            style={{
+              width: Dimensions.get('window').width - 30,
+              height: (Dimensions.get('window').width - 30) * 0.5625,
+              borderRadius: 10,
+              flex: 1
+            }}
+          />
+          {/* <View style={{ width: "70%" }}>
             <Text
               style={{
                 fontSize: 25,
@@ -252,15 +260,15 @@ const ListHeader = ({ address }) => (
             >
               Browse best suited organic fertilizers for your fields.
             </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
+          </View> */}
+          {/* <View style={{ flexDirection: "row" }}>
             <View style={{ flexDirection: "column" }}>
               <Image
                 source={images.spray}
                 style={{ height: 142, width: 89, borderRadius: 10 }}
               />
             </View>
-          </View>
+          </View> */}
         </View>
       </View>
       <View style={{ marginTop: 5 }}>

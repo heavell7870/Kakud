@@ -5,6 +5,7 @@ import Steps from "../../screens/Steps";
 import StepsDescription from "../../screens/stepDescription";
 import Category from "../../screens/Category";
 import ProductDescription from "../../screens/productDescription";
+import OrderDescription from "../../screens/OrderDescription";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MyProfile from "../../screens/MyProfile";
 import MyOrders from "../../screens/MyOrders";
@@ -53,6 +54,11 @@ const HomeStack = () => {
         options={{ header: () => null }}
       />
       <Stack.Screen
+        component={OrderDescription}
+        name="OrderDescription"
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
         component={Notifications}
         name="Notifications"
         options={{ header: () => null }}
@@ -90,6 +96,24 @@ const HomeStack = () => {
       <Stack.Screen
         component={SearchScreen}
         name="SearchScreen"
+        options={{ header: () => null }}
+      />
+    </Stack.Navigator>
+  );
+};
+const OrderStack = () => {
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        component={MyOrders}
+        name="Orders"
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        component={OrderDescription}
+        name="OrderDescription"
         options={{ header: () => null }}
       />
     </Stack.Navigator>
@@ -143,11 +167,12 @@ function MainNav() {
         }}
       />
       <Drawer.Screen
-        component={MyOrders}
+        component={OrderStack}
         name="MyOrders"
         options={{
           header: () => null,
           title: "Orders",
+          unmountOnBlur: true,
           drawerIcon: ({ color }) => (
             <Feather name="shopping-bag" color={color} size={18} />
           ),

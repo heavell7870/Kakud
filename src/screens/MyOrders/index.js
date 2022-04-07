@@ -162,7 +162,13 @@ export default function MyOrders({ navigation }) {
           )}
           style={{ marginTop: 10 }}
           renderItem={({ item: order }) => (
-            <View
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                navigation.navigate("OrderDescription", {
+                  order
+                })
+              }}
               style={{
                 marginTop: 20,
                 shadowColor: color.black,
@@ -192,15 +198,16 @@ export default function MyOrders({ navigation }) {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => (
                   <>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("ProductDescription", {
-                          name: item.product_name,
-                          cat: "Product",
-                          id: item.product_id,
-                          hide_action: true,
-                        })
-                      }
+                    <View
+                      // onPress={() =>
+                      //   // navigation.navigate("ProductDescription", {
+                      //   //   name: item.product_name,
+                      //   //   cat: "Product",
+                      //   //   id: item.product_id,
+                      //   //   hide_action: true,
+                      //   // })
+                      //   // alert(JSON.stringify(item))
+                      // }
                       style={{
                         maxHeight: 150,
                         backgroundColor: color.white,
@@ -254,13 +261,7 @@ export default function MyOrders({ navigation }) {
                           }}
                           numberOfLines={1}
                         >
-                          (
-                          {item?.variants?.map((pr, i) => {
-                            return `${pr.variant}${
-                              i == item?.variants?.length - 1 ? "" : ", "
-                            }`;
-                          })}
-                          )
+                          (₹{item.price} X {item.quantity})
                         </Text>
                         <View
                           style={{
@@ -272,7 +273,7 @@ export default function MyOrders({ navigation }) {
                           <Text style={{ fontWeight: "600" }}>
                             ₹
                             <Text style={{ ...GlobalStyles.semi_bold_text600 }}>
-                              {item.offer_price ? item.offer_price : item.price}
+                              {item.quantity * parseInt(item.price)}
                             </Text>
                           </Text>
                           <Text
@@ -321,7 +322,7 @@ export default function MyOrders({ navigation }) {
                           ).toDateString()}
                         </Text>
                       </View>
-                    </TouchableOpacity>
+                    </View>
                     {index == order.items?.length - 1 ? null : (
                       <View
                         style={{
@@ -382,7 +383,7 @@ export default function MyOrders({ navigation }) {
                   {new Date(order.order_status_date).toDateString()}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
         />
         <View

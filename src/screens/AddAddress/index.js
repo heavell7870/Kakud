@@ -174,7 +174,7 @@ export default function AddAddress({ navigation, route }) {
       return;
     }
 
-    if (gpay.length > 0 && !isgpayvalid) {
+    if (gpay.length != 10 || !isgpayvalid) {
       alert("Enter a valid Googlepay or Phonepay number");
       return;
     }
@@ -452,7 +452,7 @@ export default function AddAddress({ navigation, route }) {
             For rewards/cashback
           </Text>
           <TouchableOpacity
-            onPress={() => isPincodeAvailable()}
+            onPress={() => submit()}
             style={{
               justifyContent: "center",
               alignItems: "center",

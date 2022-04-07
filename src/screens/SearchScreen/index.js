@@ -1,25 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../components/Header";
 import Product from "../../components/Product";
 import common_axios from "../../utils/axios";
 import { color } from "../../utils/color";
+import { BACKEND_URL } from "../../utils/url";
 
 export default function SearchScreen() {
   const [text, setText] = useState("");
   const [data, setData] = useState([]);
 
   const onSearch = async () => {
+    console.log('searchcallled')
     try {
       const { data } = await common_axios.get(
-        `http://13.235.31.216/api/product-search/${text}`
+        `${BACKEND_URL}/product-search/${text}`
       );
+      console.log('response', data.data);
       setData(data.data);
     } catch (err) {
+      console.log(err);
       console.log(err?.response?.data?.message);
     }
   };
+
+  useEffect(() => {
+    if (text != '') {
+      onSearch()
+    } else {
+      setData([])
+    }
+  }, [text])
 
   return (
     <SafeAreaView style={{ backgroundColor: color.primary }}>

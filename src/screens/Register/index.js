@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../../components/Container";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Alert, Keyboard } from "react-native";
 import { color } from "../../utils/color";
 import Button from "../../components/Button";
 import { GlobalStyles } from "../../utils/globalStyles";
@@ -14,6 +14,21 @@ import { images } from "../../utils/icons";
 function Register({ navigation }) {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+
+    // cleanup function
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
+      Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
+    };
+  }, []);
+
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const _keyboardDidShow = () => setKeyboardStatus(true);
+  const _keyboardDidHide = () => setKeyboardStatus(false);
 
   const handlePress = async () => {
     let isnum = /^\d+$/.test(phone);
@@ -29,25 +44,29 @@ function Register({ navigation }) {
     }
 
     try {
-      const { data } = await common_axios.post("/auth/login", {
+      const { data } = await common_axios.post("/auth/register", {
         name: username,
         phone,
       });
-      if (data) {
+      console.log(data);
+      if (data.success == 1) {
         navigation.navigate("Verification", { phone, type: "register" });
+      } else {
+        Alert.alert('', data.message);
       }
     } catch (e) {
       console.log(e?.response?.data?.message);
-      alert("Server error");
+      // alert("Server error");
+      Alert.alert('', e.response?.data?.message);
     }
   };
 
   return (
     <Container style={{ justifyContent: "center", alignItems: "center" }}>
-      <Image
+      {!keyboardStatus && <Image
         style={{ height: 226, width: 226, resizeMode: "contain" }}
         source={images.logo}
-      />
+      />}
       <Text
         style={{
           fontSize: 28,
